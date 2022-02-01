@@ -5,6 +5,7 @@ class ValidationReturn():
 
     def __init__(self) -> None:
          self.passed = True
+         self.messages = ""
 
     def error(self, message: str):
         self.passed = False

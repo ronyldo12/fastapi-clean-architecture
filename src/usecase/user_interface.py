@@ -8,8 +8,13 @@ class UserUseCaseInterface(ABC):
     def create(self,userCreateParameters: UserCreateParamaters) -> User:
         raise NotImplemented
 
+    def list(self):
+        raise NotImplemented
+
 class UserRepositoryInteface(ABC):
     def create(self,user: User) -> User:
+        raise NotImplemented
+    def list(self):
         raise NotImplemented
     def get_by_id(self,user_id: str) -> User:  
         raise NotImplemented  

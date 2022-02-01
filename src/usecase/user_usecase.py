@@ -2,7 +2,8 @@ from warnings import catch_warnings
 from domain.user_create_parameters import UserCreateParamaters
 from domain.user import User
 from usecase.user_interface import UserRepositoryInteface, UserUseCaseInterface
-
+from exceptions.not_found_exception import NotFoundException
+from exceptions.validation_exception import ValidationException
 
 class UserUseCase(UserUseCaseInterface):
 
@@ -10,15 +11,19 @@ class UserUseCase(UserUseCaseInterface):
         self.userRepository = userRepository
         super().__init__()
 
+    def list(self):
+        return self.userRepository.list()
+
     def create(self,userCreateParameters: UserCreateParamaters) -> User:
         validation = userCreateParameters.validate()
         if validation.passed ==  False:
-            raise Exception(validation.messages)
+            raise ValidationException(validation.messages)
 
         try:
             if  self.userRepository.get_by_email(userCreateParameters.email) :   
-                raise  Exception("the e-mail "+userCreateParameters.email+" is already in use")
-        except Exception:
+                raise  ValidationException("the e-mail "+userCreateParameters.email+" is already in use")
+        except NotFoundException:
+            pass
 
 
         user = User()
@@ -26,6 +31,10 @@ class UserUseCase(UserUseCaseInterface):
         user.email = userCreateParameters.email
         user.define_password(userCreateParameters.password)
         user.name = userCreateParameters.name
+        
+        user.validate()
+        if validation.passed ==  False:
+            raise ValidationException(validation.messages)
 
         return self.userRepository.create(user)
 

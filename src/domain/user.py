@@ -20,4 +20,6 @@ class User(Entity):
 
 
     def define_password(self, plain_text_password: str):
-        self.password = hashlib.sha1(plain_text_password)
+        m = hashlib.sha1()
+        m.update(plain_text_password.encode('utf-8'))
+        self.password = m.hexdigest()

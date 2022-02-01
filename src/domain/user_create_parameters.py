@@ -6,6 +6,10 @@ class UserCreateParamaters():
     email: str
     password: str
 
+    def __init__(self):
+        self.name = ""
+        self.email = ""
+        self.password = ""
 
     def validate(self) -> ValidationReturn:
         v_return = ValidationReturn()
